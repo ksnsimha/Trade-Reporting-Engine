@@ -52,7 +52,7 @@ public class FileUtilities {
             }
             return tempFile;
         } catch (IOException e) {
-            System.err.println("Failed to process resource: " + resource.getDescription());
+            logger.error("Failed to process resource: " + resource.getDescription());
             return null;
         }
     }
