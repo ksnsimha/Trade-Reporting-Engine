@@ -1,27 +1,27 @@
-package services;
+package com.vanguard.TradeReportingEngine.Services;
 
-import Repositories.EventRepository;
-import Utilities.FileUtilities;
-import Utilities.XmlUtils;
+import com.vanguard.TradeReportingEngine.Repositories.EventRepository;
+import com.vanguard.TradeReportingEngine.Utilities.FileUtilities;
+import com.vanguard.TradeReportingEngine.Utilities.XmlUtils;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import entity.Event;
+import com.vanguard.TradeReportingEngine.Entities.EventEntity;
+import com.vanguard.TradeReportingEngine.Entities.EventSpecification;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.util.List;
 import java.math.BigDecimal;
-import java.util.Objects;
+import java.util.stream.Collectors;
+
 @Service
 public class EventServiceImpl implements EventService{
     @Autowired
@@ -63,18 +63,34 @@ public class EventServiceImpl implements EventService{
             BigDecimal premiumAmount = BigDecimal.valueOf(Double.parseDouble(premiumAmountStr));
             logger.info("Saving extracted data to the database");
 
-                    Event event = new Event();
-                    event.setBuyerParty(buyerParty);
-                    event.setSellerParty(sellerParty);
-                    event.setPremiumAmount(premiumAmount);
-                    event.setPremiumCurrency(premiumCurrency);
-                    eventRepository.save(event);
+                    EventEntity eventEntity = new EventEntity();
+                    eventEntity.setBuyerParty(buyerParty);
+                    eventEntity.setSellerParty(sellerParty);
+                    eventEntity.setPremiumAmount(premiumAmount);
+                    eventEntity.setPremiumCurrency(premiumCurrency);
+                    eventRepository.save(eventEntity);
                     logger.info("Extracted data is successfully saved in DB");
 
             } catch (Exception e) {
                 logger.error("Error while parsing XML and saving data", e);
             }
         }
+    }
+
+    @Override
+    public List<EventEntity> getFilteredTransactions() {
+
+        // Dynamically build the transaction specification
+        Specification<EventEntity> specification = EventSpecification.buildTransactionSpecification(
+                "EMU_BANK", "AUD", "BISON_BANK", "USD", null);
+
+        // Fetch matching transactions from the database
+        List<EventEntity> transactions = eventRepository.findAll(specification);
+
+        // Filter out transactions where seller_party and buyer_party are anagrams
+        return transactions.stream()
+                .filter(t -> !isAnagram(t.getSellerParty(), t.getBuyerParty()))
+                .collect(Collectors.toList());
     }
 
     /**

@@ -1,9 +1,8 @@
-package Utilities;
+package com.vanguard.TradeReportingEngine.Utilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-import services.EventServiceImpl;
 
 import javax.xml.xpath.*;
 

@@ -1,8 +1,8 @@
 package com.vanguard.TradeReportingEngine;
 
-import Repositories.EventRepository;
-import Utilities.FileUtilities;
-import entity.Event;
+import com.vanguard.TradeReportingEngine.Repositories.EventRepository;
+import com.vanguard.TradeReportingEngine.Utilities.FileUtilities;
+import com.vanguard.TradeReportingEngine.Entities.EventEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,13 +10,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import services.EventService;
-import services.EventServiceImpl;
+import com.vanguard.TradeReportingEngine.Services.EventServiceImpl;
 
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -45,7 +43,7 @@ class TradeReportingEngineApplicationTests {
 		eventService.processXmlFiles();
 
 		// Verify that the save method in the repository was called
-		verify(eventRepository, times(xmlFiles.size())).save(any(Event.class));
+		verify(eventRepository, times(xmlFiles.size())).save(any(EventEntity.class));
 	}
 
 }
