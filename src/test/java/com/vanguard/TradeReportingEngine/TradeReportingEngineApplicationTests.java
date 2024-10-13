@@ -1,14 +1,11 @@
 package com.vanguard.TradeReportingEngine;
 
+import com.vanguard.TradeReportingEngine.Customization.ComparisonType;
+import com.vanguard.TradeReportingEngine.Customization.CustomCondition;
 import com.vanguard.TradeReportingEngine.Repositories.EventRepository;
-import com.vanguard.TradeReportingEngine.Utilities.FileUtilities;
 import com.vanguard.TradeReportingEngine.Entities.EventEntity;
-import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,13 +16,11 @@ import com.vanguard.TradeReportingEngine.Services.EventServiceImpl;
 import org.springframework.context.annotation.PropertySource;
 
 
-import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
@@ -229,13 +224,19 @@ class TradeReportingEngineApplicationTests {
 	 */
 	@Test
 	public void testFilterCondition1WithAdditionalConditions() throws Exception {
+
+		List<CustomCondition> customConditionList = new ArrayList<>();
+		CustomCondition c1 = new CustomCondition("buyerParty","VANGUARD", ComparisonType.NOT_EQUALS);
+		customConditionList.add(c1);
+
+
 		EventEntity eventEntity = new EventEntity();
 		eventEntity.setBuyerParty("VANGUARD");
 		eventEntity.setSellerParty("EMU_BANK");
 		eventEntity.setPremiumAmount(BigDecimal.valueOf(200.0000));
 		eventEntity.setPremiumCurrency("AUD");
 		eventRepository.save(eventEntity);
-		List<EventEntity> filtered = eventService.getFilteredTransactionsWithAdditionalConditions();
+		List<EventEntity> filtered = eventService.getFilteredTransactions(customConditionList);
 		assertThat(filtered.size()).isEqualTo(0);
 
 	}
@@ -247,16 +248,83 @@ class TradeReportingEngineApplicationTests {
 	 */
 	@Test
 	public void PositiveTestcaseWithAdditionalConditions() throws Exception {
+
+		List<CustomCondition> customConditionList = new ArrayList<>();
+		CustomCondition c1 = new CustomCondition("buyerParty","VANGUARD", ComparisonType.NOT_EQUALS);
+		customConditionList.add(c1);
+
+
 		EventEntity eventEntity = new EventEntity();
 		eventEntity.setBuyerParty("BuyerParty");
 		eventEntity.setSellerParty("EMU_BANK");
 		eventEntity.setPremiumAmount(BigDecimal.valueOf(200.0000));
 		eventEntity.setPremiumCurrency("AUD");
 		eventRepository.save(eventEntity);
-		List<EventEntity> filtered = eventService.getFilteredTransactionsWithAdditionalConditions();
+		List<EventEntity> filtered = eventService.getFilteredTransactions(customConditionList);
 		assertThat(filtered.size()).isEqualTo(1);
 
 	}
+
+	/**
+	 * 5 Events are added. Out of which 3 doesn't match either one or all of the filter conditions
+	 * Expected Result : eventService.getFilteredTransactions should return 2 transaction
+	 * @throws Exception
+	 */
+	@Test
+	public void testMultipleEventsWithAdditionalCondition() throws Exception {
+
+		List<CustomCondition> customConditionList = new ArrayList<>();
+		CustomCondition c1 = new CustomCondition("buyerParty","VANGUARD", ComparisonType.NOT_EQUALS);
+		customConditionList.add(c1);
+
+
+		EventEntity eventEntity1 = new EventEntity();
+		eventEntity1.setBuyerParty("BuyerParty");
+		eventEntity1.setSellerParty("BISON_BANK");
+		eventEntity1.setPremiumAmount(BigDecimal.valueOf(200.0000));
+		eventEntity1.setPremiumCurrency("USD");
+		eventRepository.save(eventEntity1);
+
+		EventEntity eventEntity6 = new EventEntity();
+		eventEntity6.setBuyerParty("VANGUARD");
+		eventEntity6.setSellerParty("BISON_BANK");
+		eventEntity6.setPremiumAmount(BigDecimal.valueOf(300.0000));
+		eventEntity6.setPremiumCurrency("USD");
+		eventRepository.save(eventEntity6);
+
+		EventEntity eventEntity2 = new EventEntity();
+		eventEntity2.setBuyerParty("buyerParty");
+		eventEntity2.setSellerParty("EMU_BANK");
+		eventEntity2.setPremiumAmount(BigDecimal.valueOf(400.0000));
+		eventEntity2.setPremiumCurrency("AUD");
+		eventRepository.save(eventEntity2);
+
+		EventEntity eventEntity3 = new EventEntity();
+		eventEntity3.setBuyerParty("BuyerParty");
+		eventEntity3.setSellerParty("BISON_BANK");
+		eventEntity3.setPremiumAmount(BigDecimal.valueOf(500.0000));
+		eventEntity3.setPremiumCurrency("AUD");
+		eventRepository.save(eventEntity3);
+
+		EventEntity eventEntity4 = new EventEntity();
+		eventEntity4.setBuyerParty("buyerParty");
+		eventEntity4.setSellerParty("EMU_BANK");
+		eventEntity4.setPremiumAmount(BigDecimal.valueOf(400.0000));
+		eventEntity4.setPremiumCurrency("USD");
+		eventRepository.save(eventEntity4);
+
+		EventEntity eventEntity5 = new EventEntity();
+		eventEntity5.setBuyerParty("EMU_BANK");
+		eventEntity5.setSellerParty("EMU_BANK");
+		eventEntity5.setPremiumAmount(BigDecimal.valueOf(400.0000));
+		eventEntity5.setPremiumCurrency("USD");
+		eventRepository.save(eventEntity5);
+
+		List<EventEntity> filtered = eventService.getFilteredTransactions(customConditionList);
+		assertThat(filtered.size()).isEqualTo(2);
+
+	}
+
 
 
 }

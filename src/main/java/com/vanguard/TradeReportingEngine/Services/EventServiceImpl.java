@@ -91,24 +91,21 @@ public class EventServiceImpl implements EventService{
 
         // Fetch matching transactions from the database
         List<EventEntity> transactions = eventRepository.findAll(specification);
-
+        logger.info("Found " + transactions.size()+ " matching transactions");
         // Filter out transactions where seller_party and buyer_party are anagrams
         return transactions.stream()
                 .filter(t -> !isAnagram(t.getSellerParty(), t.getBuyerParty()))
                 .collect(Collectors.toList());
     }
-
-    public List<EventEntity> getFilteredTransactionsWithAdditionalConditions() {
-        List<CustomCondition> customConditionList = new ArrayList<>();
-        CustomCondition c1 = new CustomCondition("buyerParty","VANGUARD", ComparisonType.NOT_EQUALS);
-        customConditionList.add(c1);
+    @Override
+    public List<EventEntity> getFilteredTransactions(List<CustomCondition> customConditionList) {
         // Dynamically build the transaction specification
         Specification<EventEntity> specification = EventSpecification.buildTransactionSpecification(
                 "EMU_BANK", "AUD", "BISON_BANK", "USD", customConditionList);
 
         // Fetch matching transactions from the database
         List<EventEntity> transactions = eventRepository.findAll(specification);
-
+        logger.info("Found " + transactions.size()+ " matching transactions");
         // Filter out transactions where seller_party and buyer_party are anagrams
         return transactions.stream()
                 .filter(t -> !isAnagram(t.getSellerParty(), t.getBuyerParty()))
