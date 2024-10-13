@@ -5,6 +5,7 @@ import com.vanguard.TradeReportingEngine.Entities.EventEntity;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,10 +13,16 @@ import lombok.Setter;
 @Setter
 public class CustomCondition {
     @JsonProperty
+    @Pattern(
+            regexp = "buyer_party|seller_party|premium_amount|premium_currency",
+            message = "Invalid fieldName. Allowed values are buyer_party, seller_party, premium_amount, and premium_currency"
+    )
     private String fieldName;
     @JsonProperty
     private Object value;
     @JsonProperty
+    @Pattern(regexp = "EQUALS|NOT_EQUALS",
+            message = "Invalid comparisonType. Allowed values are EQUALS and NOT_EQUALS")
     private final ComparisonType comparisonType;
 
     public CustomCondition(String fieldName, Object value, ComparisonType comparisonType) {
