@@ -1,8 +1,7 @@
-package com.vanguard.TradeReportingEngine.Entities;
+package com.vanguard.TradeReportingEngine.Customization;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
+import com.vanguard.TradeReportingEngine.Entities.EventEntity;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -45,30 +44,3 @@ public class EventSpecification {
     }
 }
 
-class CustomCondition {
-    private String fieldName;
-    private Object value;
-    private final ComparisonType comparisonType;
-
-    public CustomCondition(String fieldName, Object value, ComparisonType comparisonType) {
-        this.fieldName = fieldName;
-        this.value = value;
-        this.comparisonType = comparisonType;
-    }
-
-    public Predicate toPredicate(Root<EventEntity> root, CriteriaBuilder criteriaBuilder) {
-        switch (comparisonType) {
-            case EQUALS:
-                return criteriaBuilder.equal(root.get(fieldName), value);
-            case NOT_EQUALS:
-                return criteriaBuilder.notEqual(root.get(fieldName), value);
-            default:
-                throw new IllegalArgumentException("Unsupported comparison type");
-        }
-    }
-}
-
-enum ComparisonType {
-    EQUALS,
-    NOT_EQUALS
-}

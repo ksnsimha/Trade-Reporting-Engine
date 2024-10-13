@@ -222,4 +222,41 @@ class TradeReportingEngineApplicationTests {
 		assertThat(foundTransaction.getPremiumCurrency()).isEqualTo("USD");
 	}
 
+	/**
+	 * The seller_party is EMU_BANK and the premium_currency is AUD ,Buyer Party is VANGUARD No Anagram
+	 * Expected Result : eventService.getFilteredTransactionsWithAdditionalConditions should return 0 transaction
+	 * @throws Exception
+	 */
+	@Test
+	public void testFilterCondition1WithAdditionalConditions() throws Exception {
+		EventEntity eventEntity = new EventEntity();
+		eventEntity.setBuyerParty("VANGUARD");
+		eventEntity.setSellerParty("EMU_BANK");
+		eventEntity.setPremiumAmount(BigDecimal.valueOf(200.0000));
+		eventEntity.setPremiumCurrency("AUD");
+		eventRepository.save(eventEntity);
+		List<EventEntity> filtered = eventService.getFilteredTransactionsWithAdditionalConditions();
+		assertThat(filtered.size()).isEqualTo(0);
+
+	}
+
+	/**
+	 * The seller_party is EMU_BANK and the premium_currency is AUD ,Buyer Party is not VANGUARD No Anagram
+	 * Expected Result : eventService.getFilteredTransactionsWithAdditionalConditions should return 1 transaction
+	 * @throws Exception
+	 */
+	@Test
+	public void PositiveTestcaseWithAdditionalConditions() throws Exception {
+		EventEntity eventEntity = new EventEntity();
+		eventEntity.setBuyerParty("BuyerParty");
+		eventEntity.setSellerParty("EMU_BANK");
+		eventEntity.setPremiumAmount(BigDecimal.valueOf(200.0000));
+		eventEntity.setPremiumCurrency("AUD");
+		eventRepository.save(eventEntity);
+		List<EventEntity> filtered = eventService.getFilteredTransactionsWithAdditionalConditions();
+		assertThat(filtered.size()).isEqualTo(1);
+
+	}
+
+
 }

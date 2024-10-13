@@ -1,12 +1,14 @@
 package com.vanguard.TradeReportingEngine.Services;
 
+import com.vanguard.TradeReportingEngine.Customization.ComparisonType;
+import com.vanguard.TradeReportingEngine.Customization.CustomCondition;
 import com.vanguard.TradeReportingEngine.Repositories.EventRepository;
 import com.vanguard.TradeReportingEngine.Utilities.FileUtilities;
 import com.vanguard.TradeReportingEngine.Utilities.XmlUtils;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.vanguard.TradeReportingEngine.Entities.EventEntity;
-import com.vanguard.TradeReportingEngine.Entities.EventSpecification;
+import com.vanguard.TradeReportingEngine.Customization.EventSpecification;
 import jakarta.annotation.PostConstruct;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 import java.util.stream.Collectors;
@@ -85,6 +88,23 @@ public class EventServiceImpl implements EventService{
         // Dynamically build the transaction specification
         Specification<EventEntity> specification = EventSpecification.buildTransactionSpecification(
                 "EMU_BANK", "AUD", "BISON_BANK", "USD", null);
+
+        // Fetch matching transactions from the database
+        List<EventEntity> transactions = eventRepository.findAll(specification);
+
+        // Filter out transactions where seller_party and buyer_party are anagrams
+        return transactions.stream()
+                .filter(t -> !isAnagram(t.getSellerParty(), t.getBuyerParty()))
+                .collect(Collectors.toList());
+    }
+
+    public List<EventEntity> getFilteredTransactionsWithAdditionalConditions() {
+        List<CustomCondition> customConditionList = new ArrayList<>();
+        CustomCondition c1 = new CustomCondition("buyerParty","VANGUARD", ComparisonType.NOT_EQUALS);
+        customConditionList.add(c1);
+        // Dynamically build the transaction specification
+        Specification<EventEntity> specification = EventSpecification.buildTransactionSpecification(
+                "EMU_BANK", "AUD", "BISON_BANK", "USD", customConditionList);
 
         // Fetch matching transactions from the database
         List<EventEntity> transactions = eventRepository.findAll(specification);
