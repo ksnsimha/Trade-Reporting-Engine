@@ -40,8 +40,8 @@ curl -X GET http://localhost:8080/api/transactions/filtered
 ```
 Technologies Used
 
-Java 8+
-Spring Boot
-Spring Data JPA
-H2 Database (for in-memory testing)
-Maven
+OpenJDK Runtime Environment (build 21.0.1+12-29)<br/>
+Spring Boot<br/>
+Spring Data JPA<br/>
+H2 Database (for in-memory testing)<br/>
+Maven<br/>
