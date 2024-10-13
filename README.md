@@ -6,8 +6,8 @@ This project is a Spring Boot-based Trade Reporting Engine. It uses JPA for data
 
 <h2>Prerequisites:</h2>
 
-Java Installed<br/>
-Maven installed<br/>
+Java 17 or above Installed<br/>
+Apache Maven 3.9.9 installed<br/>
 <h2>How to Run the Project</h2>
 
 After cloning the repository, follow these steps to build and run the project:
