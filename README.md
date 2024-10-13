@@ -1,14 +1,14 @@
-Trade Reporting Engine
+<h1>Trade Reporting Engine</h1>
 
-Description
+<h2>Description:</h2>
 
 This project is a Spring Boot-based Trade Reporting Engine. It uses JPA for data persistence and provides an API to filter and retrieve transaction data.
 
-Prerequisites
+<h2>Prerequisites:</h2>
 
-Java Installed
-Maven installed
-How to Run the Project
+Java Installed<br/>
+Maven installed<br/>
+<h2>How to Run the Project</h2>
 
 After cloning the repository, follow these steps to build and run the project:
 
@@ -24,7 +24,7 @@ Run the JAR file:
 ``` bash
 java -jar TradeReportingEngine-0.0.1-SNAPSHOT.jar.original
 ```
-Triggering the API
+<h2>Triggering the API</h2><br/>
 
 Once the application is running, you can access the filtered transactions API at the following URL:
 
