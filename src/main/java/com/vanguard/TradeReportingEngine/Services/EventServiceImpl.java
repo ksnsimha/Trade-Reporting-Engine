@@ -8,6 +8,7 @@ import com.google.common.collect.Multiset;
 import com.vanguard.TradeReportingEngine.Entities.EventEntity;
 import com.vanguard.TradeReportingEngine.Entities.EventSpecification;
 import jakarta.annotation.PostConstruct;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 @Service
+@Setter
 public class EventServiceImpl implements EventService{
     @Autowired
     private EventRepository eventRepository;
