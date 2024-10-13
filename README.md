@@ -13,31 +13,31 @@ How to Run the Project
 After cloning the repository, follow these steps to build and run the project:
 
 Build the Project:
-bash
-Copy code
+``` bash
 mvn clean package
+```
 Navigate to the target directory:
-bash
-Copy code
+``` bash
 cd target
+```
 Run the JAR file:
-bash
-Copy code
+``` bash
 java -jar TradeReportingEngine-0.0.1-SNAPSHOT.jar.original
+```
 Triggering the API
 
 Once the application is running, you can access the filtered transactions API at the following URL:
 
-bash
-Copy code
+```bash
 http://localhost:8080/api/transactions/filtered
+```
 Example Request
 
 Use curl or a browser to trigger the API:
 
-bash
-Copy code
+``` bash
 curl -X GET http://localhost:8080/api/transactions/filtered
+```
 Technologies Used
 
 Java 8+
