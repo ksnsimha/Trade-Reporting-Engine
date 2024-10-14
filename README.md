@@ -24,7 +24,7 @@ Run the JAR file:
 ``` bash
 java -jar TradeReportingEngine-0.0.1-SNAPSHOT.jar.original
 ```
-<h2>Triggering the API</h2><br/>
+<h2>Triggering the GET API with default filter conditions</h2><br/>
 
 Once the application is running, you can access the filtered transactions API at the following URL:
 
@@ -38,7 +38,32 @@ Use curl or a browser to trigger the API:
 ``` bash
 curl -X GET http://localhost:8080/api/transactions/filtered
 ```
-Technologies Used
+<h2>Triggering the POST API with custom filter conditions</h2><br/>
+
+You can access the filtered transactions API at the following URL:
+
+```bash
+ http://localhost:8080/api/transactions/customFiltered
+```
+Example RequestPayload
+```json
+[
+    {
+        "fieldName": "premiumAmount",
+        "value":      600.0000,
+        "comparisonType": "NOT_EQUALS"
+    },
+    {
+        "fieldName": "premiumAmount",
+        "value":      500.0000,
+        "comparisonType": "NOT_EQUALS"
+    }
+]
+```
+<h3>JSON Field Validations</h3><br/>
+Acceptable values for fieldName are buyer_party,seller_party,premium_amount,premium_currency. <br/>
+Acceptable values for comparisonType are EQUALS,NOT_EQUALS<br/>
+<h3>Technologies Used</h3>
 
 OpenJDK Runtime Environment (build 21.0.1+12-29)<br/>
 Spring Boot<br/>
