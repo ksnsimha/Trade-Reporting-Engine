@@ -91,7 +91,7 @@ public class EventServiceImpl implements EventService{
 
         // Fetch matching transactions from the database
         List<EventEntity> transactions = eventRepository.findAll(specification);
-        logger.info("Found " + transactions.size()+ " matching transactions");
+
         // Filter out transactions where seller_party and buyer_party are anagrams
         return transactions.stream()
                 .filter(t -> !isAnagram(t.getSellerParty(), t.getBuyerParty()))
@@ -105,7 +105,7 @@ public class EventServiceImpl implements EventService{
 
         // Fetch matching transactions from the database
         List<EventEntity> transactions = eventRepository.findAll(specification);
-        logger.info("Found " + transactions.size()+ " matching transactions");
+      
         // Filter out transactions where seller_party and buyer_party are anagrams
         return transactions.stream()
                 .filter(t -> !isAnagram(t.getSellerParty(), t.getBuyerParty()))
