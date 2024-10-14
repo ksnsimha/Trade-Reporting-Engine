@@ -40,7 +40,7 @@ curl -X GET http://localhost:8080/api/transactions/filtered
 ```
 <h2>Triggering the POST API with custom filter conditions</h2><br/>
 
-You can access the filtered transactions API at the following URL:
+You can customize the filter conditions by triggering API at the following URL:
 
 ```bash
  http://localhost:8080/api/transactions/customFiltered
@@ -70,3 +70,7 @@ Spring Boot<br/>
 Spring Data JPA<br/>
 H2 Database (for in-memory testing)<br/>
 Maven<br/>
+
+<h3>Future Enhancements</h3>
+Containerization<br/>
+Apache Kafka
