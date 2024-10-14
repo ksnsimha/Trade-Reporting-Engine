@@ -49,14 +49,14 @@ Example RequestPayload
 ```json
 [
     {
-        "fieldName": "premiumAmount",
-        "value":      600.0000,
-        "comparisonType": "NOT_EQUALS"
+        "fieldName": "buyerParty",
+        "value":      "LEFT_BANK",
+        "comparisonType": "EQUALS"
     },
     {
         "fieldName": "premiumAmount",
-        "value":      500.0000,
-        "comparisonType": "NOT_EQUALS"
+        "value":      200.0000,
+        "comparisonType": "EQUALS"
     }
 ]
 ```
